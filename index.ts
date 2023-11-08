@@ -1,17 +1,20 @@
 import axios from 'axios';
-import { from, lastValueFrom, firstValueFrom } from 'rxjs';
+import { of, from, lastValueFrom, firstValueFrom } from 'rxjs';
 
-// // Import stylesheets
-// import './style.css';
-
-// // Write TypeScript code!
-// const appDiv: HTMLElement = document.getElementById('app');
-// appDiv.innerHTML = `<h1>TypeScript Starter</h1>`;
-
+// API call
 const obs$ = from(axios.get('https://api.github.com/users'));
+firstValueFrom(obs$).then(payload => console.log('API data from firstValueFrom', {
+  payloadLength: payload.data.length, 
+  status: payload.status, 
+  statusText: payload.statusText
+}))
+lastValueFrom(obs$).then(payload => console.log('API data from lastValueFrom', {
+  payloadLength: payload.data.length, 
+  status: payload.status, 
+  statusText: payload.statusText
+}))
 
-async function test() {
-  const test = await firstValueFrom(obs$);
-  console.log(test);
-}
-test();
+// Stream of data
+const source$ = of('First record', 'x', 'y', 'Last Record');
+firstValueFrom(source$).then(payload => console.log('Stream data from firstValueFrom', { payload }));
+lastValueFrom(source$).then(payload => console.log('Stream data from lastValueFrom', { payload }));
